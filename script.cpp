@@ -10,8 +10,11 @@ void update() {
     static bool deadEyeWasActive = false;
     static int previousAmmoInClip = -1;
     static bool trackingAmmo = false;
-    static Hash previousWeapon = 0; 
+    static Hash previousWeapon = 0;
+
     bool deadEyeActive = PLAYER::_0xB16223CB7DA965F0(player);
+    bool isReloading = PED::IS_PED_RELOADING(playerPed);
+
     Hash currentWeapon = 0;
     int currentAmmoInClip = 0;
 
@@ -31,7 +34,7 @@ void update() {
         previousWeapon = currentWeapon;
     }
 
-    if (trackingAmmo && deadEyeActive && previousAmmoInClip >= 0) {
+    if (trackingAmmo && deadEyeActive && !isReloading && previousAmmoInClip >= 0) {
         if (currentAmmoInClip > previousAmmoInClip) {
             WEAPON::SET_AMMO_IN_CLIP(playerPed, currentWeapon, previousAmmoInClip);
         }
@@ -41,9 +44,11 @@ void update() {
         trackingAmmo = false;
     }
 
-    previousAmmoInClip = currentAmmoInClip;
-    deadEyeWasActive = deadEyeActive;
+    if (!isReloading) {
+        previousAmmoInClip = currentAmmoInClip;
+    }
 
+    deadEyeWasActive = deadEyeActive;
     previousWeapon = currentWeapon;
 
     WAIT(0);
@@ -60,3 +65,5 @@ void ScriptMain() {
     srand(GetTickCount());
     main();
 }
+
+
