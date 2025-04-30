@@ -77,9 +77,8 @@ void update() {
 
     // If ammo increased during DeadEye (auto refill), restore saved values
     if (trackingAmmo && deadEyeActive && !isReloading && previousAmmoLeft >= 0 && previousAmmoRight >= 0) {
-        if (currentAmmoRight > previousAmmoRight) {
+        if (currentAmmoRight > previousAmmoRight && previousAmmoRight != -1) {
             WEAPON::_0xDF4A3404D022ADDE(playerPed, (Any*)&guidRight, previousAmmoRight);
-            draw_text("Restored RIGHT clip", 960, 150);
         }
 
         if (currentAmmoLeft > previousAmmoLeft) {
