@@ -42,6 +42,8 @@ static bool trackingAmmo = false;
 static int previousAmmoRight = -1;
 static int previousAmmoLeft = -1;
 static bool deadEyeWasActive = false;
+static bool realoadedRightOnce = false;
+static bool realoadedLefttOnce = false;
 
 // ---------------------------------------------
 // Main update function (call every tick)
@@ -76,13 +78,15 @@ void update() {
     }
 
     // If ammo increased during DeadEye (auto refill), restore saved values
-    if (trackingAmmo && deadEyeActive && !isReloading && previousAmmoLeft >= 0 && previousAmmoRight >= 0) {
+    if (trackingAmmo && deadEyeActive && !isReloading && previousAmmoLeft >= 0 && previousAmmoRight >= 0 && !realoadedRightOnce) {
         if (currentAmmoRight > previousAmmoRight && previousAmmoRight != -1) {
             WEAPON::_0xDF4A3404D022ADDE(playerPed, (Any*)&guidRight, previousAmmoRight);
+            realoadedRightOnce = true;
         }
 
-        if (currentAmmoLeft > previousAmmoLeft) {
+        if (currentAmmoLeft > previousAmmoLeft && !isReloading && !realoadedLefttOnce) {
             WEAPON::_0xDF4A3404D022ADDE(playerPed, (Any*)&guidLeft, previousAmmoLeft);
+			realoadedLefttOnce = true;
             draw_text("Restored LEFT clip", 960, 180);
         }
     }
@@ -90,6 +94,8 @@ void update() {
     // Reset tracking when DeadEye ends
     if (!deadEyeActive && trackingAmmo) {
         trackingAmmo = false;
+		realoadedRightOnce = false;
+		realoadedLefttOnce = false;
         draw_text("DeadEye ended — tracking OFF", 960, 220);
     }
 
@@ -113,5 +119,6 @@ void ScriptMain() {
     srand(GetTickCount());
     main();
 }
+
 
 
