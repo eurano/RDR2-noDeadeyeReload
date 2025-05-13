@@ -3,6 +3,7 @@
 #include "types.h"
 #include "nativeCaller.h"
 #include "enums.h"
+#include "main.h"
 
 void update() {
     Player player = PLAYER::PLAYER_ID();
