@@ -6,14 +6,21 @@
 #include "main.h"
 #include <string>
 
-// ---------------------------------------------
-// Struct definition for GUID
+#if _MSC_VER > 1800  
 struct sGuid {
-    alignas(8) int data1;
-    alignas(8) int data2;
-    alignas(8) int data3;
-    alignas(8) int data4;
+	alignas(8) int data1;
+	alignas(8) int data2;
+	alignas(8) int data3;
+	alignas(8) int data4;
 };
+#else   //if Visual Studio 2013
+struct sGuid {
+	__declspec(align(8)) int data1;
+	__declspec(align(8)) int data2;
+	__declspec(align(8)) int data3;
+	__declspec(align(8)) int data4;
+};
+#endif
 
 // ---------------------------------------------
 // Helper: Draw on-screen text for debugging
