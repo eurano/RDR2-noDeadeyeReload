@@ -85,7 +85,7 @@ void update() {
     int currentAmmoInClip = 0;
 
     if (WEAPON::GET_CURRENT_PED_WEAPON(playerPed, &currentWeapon, true, 0, false)) {
-        WEAPON::GET_AMMO_IN_CLIP(playerPed, &currentAmmoInClip, currentWeapon);
+        WEAPON::GET_AMMO_IN_CLIP(playerPed, &currentAmmoInClip, currentWeapon); //there is error in this function in SDK natives.h wich has to be fixed manually
     }
 
     isCurrentTwoHanded = WEAPON::_0x0556E9D2ECF39D01(currentWeapon);
