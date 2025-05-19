@@ -71,7 +71,7 @@ void update() {
         trackingAmmo = true;
     }
 
-    if (trackingAmmo && isCurrentTwoHanded && currentAmmoInClip > previousAmmoInClip && reloadedTwoHandedOnce == false && previousAmmoInClip != -1 && !isReloading) {
+    if (trackingAmmo && isCurrentTwoHanded && currentAmmoInClip > previousAmmoInClip && reloadedTwoHandedOnce == false && previousAmmoInClip != -1 && !isReloading && !isTargetDueling) {
         WEAPON::SET_AMMO_IN_CLIP(playerPed, currentWeapon, previousAmmoInClip);
         reloadedTwoHandedOnce = true;
     }
@@ -96,7 +96,7 @@ void update() {
         reloadedTwoHandedOnce = false;
     }
 
-    if (!isReloading && !deadEyeActive) {
+    if (!isReloading && !deadEyeActive && !isTargetDueling) {
         previousAmmoRight = currentAmmoRight;
         previousAmmoLeft = currentAmmoLeft;
         storedPreviousAmmoInClip = currentAmmoInClip;
