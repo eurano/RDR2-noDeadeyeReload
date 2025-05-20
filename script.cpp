@@ -25,17 +25,14 @@ static bool deadEyeWasActive = false;
 static bool reloadedRightOnce = false;
 static bool reloadedLefttOnce = false;
 static bool reloadedTwoHandedOnce = false;
-
+static Hash previousWeaponHash = 0;
 static bool isCurrentTwoHanded = false;
 static int storedPreviousAmmoInClip = -1;
-static Hash previousWeapon = 0;
-static boolean isTargetDueling = false;
 
 void update() {
     Player player = PLAYER::PLAYER_ID();
     Ped playerPed = PLAYER::PLAYER_PED_ID();
     bool deadEyeActive = PLAYER::_0xB16223CB7DA965F0(player);
-    static bool deadEyeWasActive = false;
     bool isReloading = PED::IS_PED_RELOADING(playerPed);
 
     int previousAmmoInClip = storedPreviousAmmoInClip;
@@ -59,22 +56,15 @@ void update() {
 
     isCurrentTwoHanded = WEAPON::_0x0556E9D2ECF39D01(currentWeapon);
 
-    Entity foundEntity;
-    boolean target1 = PLAYER::GET_PLAYER_TARGET_ENTITY(player, &foundEntity);
-    boolean target2 = PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(player, &foundEntity);
-
-    if (target1 != false || target2 != false && ENTITY::IS_ENTITY_A_PED(foundEntity) != false) {
-        isTargetDueling = AI::_0xC8B29D18022EA2B7(foundEntity);
-    }
-
-    if (deadEyeActive && !trackingAmmo && !isTargetDueling) {
+    if (deadEyeActive && !trackingAmmo && previousWeaponHash != -1569615261) {
         trackingAmmo = true;
     }
 
-    if (trackingAmmo && isCurrentTwoHanded && currentAmmoInClip > previousAmmoInClip && reloadedTwoHandedOnce == false && previousAmmoInClip != -1 && !isReloading && !isTargetDueling) {
+
+    if (trackingAmmo && isCurrentTwoHanded && currentAmmoInClip > previousAmmoInClip && reloadedTwoHandedOnce == false && previousAmmoInClip != -1 && !isReloading) {
         WEAPON::SET_AMMO_IN_CLIP(playerPed, currentWeapon, previousAmmoInClip);
         reloadedTwoHandedOnce = true;
-    }
+      }
 
     if (trackingAmmo && deadEyeActive && !isReloading && previousAmmoLeft >= 0 && previousAmmoRight >= 0 && !isCurrentTwoHanded && !reloadedTwoHandedOnce) {
 
@@ -96,10 +86,11 @@ void update() {
         reloadedTwoHandedOnce = false;
     }
 
-    if (!isReloading && !deadEyeActive && !isTargetDueling) {
+    if (!isReloading && !deadEyeActive) {
         previousAmmoRight = currentAmmoRight;
         previousAmmoLeft = currentAmmoLeft;
         storedPreviousAmmoInClip = currentAmmoInClip;
+        previousWeaponHash = currentWeapon;
     }
 
     deadEyeWasActive = deadEyeActive;
